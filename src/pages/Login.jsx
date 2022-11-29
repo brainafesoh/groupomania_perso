@@ -4,16 +4,16 @@ import logo from "../assets/images/logo_black.svg";
 
 const handleLoginClickIntent = ({
   distanceFromLeft,
-  distanceFromRight,
+  eltWidth,
   formIsValid,
 }) => {
-  return formIsValid ? null : distanceFromLeft > distanceFromRight;
+  return formIsValid ? null : distanceFromLeft > eltWidth / 2;
 };
 
 function Login() {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const [formIsValid, setFormIsValid] = useState(false);
+  const [formIsValid] = useState(false);
   const [slideLeft, setSlideLeft] = useState(null);
   return (
     <div className="h-screen md:fixed top-0 left-0 right-0 bottom-0 flex flex-col md:flex-row">
@@ -112,7 +112,7 @@ function Login() {
                 setSlideLeft(
                   handleLoginClickIntent({
                     distanceFromLeft: event.nativeEvent.offsetX,
-                    distanceFromRight: event.nativeEvent.offsetY,
+                    eltWidth: event.nativeEvent.target.offsetWidth,
                     formIsValid,
                   })
                 )
