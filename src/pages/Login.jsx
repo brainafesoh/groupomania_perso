@@ -1,56 +1,71 @@
-import { useState } from "react";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro"; // <-- import styles to be used
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
 import loginPic from "../assets/images/loginPic3.png";
 import logo from "../assets/images/logo_black.svg";
 
-const handleLoginClickIntent = ({
-  distanceFromLeft,
-  eltWidth,
-  formIsValid,
+const checkIfButtonShouldSlideLeft = ({
+  buttonDistanceFromLeft,
+  buttonWidth,
+  isFormValid,
 }) => {
-  return formIsValid ? null : distanceFromLeft > eltWidth / 2;
+  return isFormValid ? null : buttonDistanceFromLeft > buttonWidth / 2;
 };
+const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
 function Login() {
   const [email, setEmail] = useState(null);
+  const [isEmailValid, setIsEmailValid] = useState(false);
   const [password, setPassword] = useState(null);
-  const [formIsValid] = useState(false);
-  const [slideLeft, setSlideLeft] = useState(null);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [buttonShouldSlideLeft, setButtonShouldSlideLeft] = useState(null);
+
+  useEffect(() => {
+    setIsEmailValid(emailRegex.test(email));
+  }, [email]);
+  useEffect(() => {
+    setIsPasswordValid(passwordRegex.test(password));
+  }, [password]);
+
   return (
-    <div className="h-screen md:fixed top-0 left-0 right-0 bottom-0 flex flex-col md:flex-row">
-      <div className="h-1/3 md:h-full md:w-1/2 bg-secondary flex flex-col items-center justify-center relative transition-all duration-500">
+    <div className="h-screen lg:fixed top-0 left-0 right-0 bottom-0 flex flex-col lg:flex-row">
+      <div className="h-1/3 lg:h-full lg:w-1/2 bg-secondary flex flex-col items-center justify-center relative transition-all duration-500">
         <img
           src={loginPic}
           alt=""
-          className="w-full h-full md:h-2/3 object-contain"
+          className="w-full h-full lg:h-2/3 object-contain"
         />
         {/* Carousel description and indicators displayed below */}
-        <div className="absolute bottom-2 md:bottom-32  flex flex-col items-center text-center gap-4 text-primary max-w-[300px]">
-          <h1 className="md:text-2xl font-semibold">
+        <div className="absolute bottom-2 lg:bottom-32  flex flex-col items-center text-center gap-4 text-primary max-w-[300px]">
+          <h1 className="lg:text-2xl font-semibold">
             New Scheduling And Routing Options
           </h1>
-          <p className="hidden md:block">
+          <p className="hidden lg:block">
             We also updated the format of podcasts and rewards
           </p>
           {/* Carousel indicators below */}
-          <span className="md:flex gap-1 hidden">
+          <span className="lg:flex gap-1 hidden">
             <span className="h-2 w-5 bg-primary rounded-full"></span>
             <span className="h-2 w-2 bg-primary rounded-full bg-opacity-50"></span>
             <span className="h-2 w-2 bg-primary rounded-full bg-opacity-50"></span>
           </span>
         </div>
       </div>
-      <div className="my-10 md:my-0 md:w-1/2 flex flex-col items-center justify-center transition-all duration-500">
-        <div className="flex flex-col w-4/5 md:w-1/2 items-center gap-10">
-          <div className="w-full flex justify-between items-center">
-            <img className="max-h-[40px]" src={logo} alt="logo" />
-            <h1 className="text-2xl font-bold text-primary">Login!</h1>
+      <div className="my-10 lg:my-0 lg:w-1/2 flex flex-col items-center transition-all duration-500">
+        <div className="flex flex-col w-full px-4 lg:px-0 lg:w-3/5 gap-8 lg:gap-16 lg:pt-32">
+          <div className="flex flex-col items-center gap-4 lg:gap-8">
+            <img className="max-h-14" src={logo} alt="logo" />
+            <div className="flex flex-col items-center gap-3">
+              <h1 className="text-2xl font-bold text-primary">Login Here!</h1>
+              <p className="text-center text-tertiary font-bold">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugiat
+                provident commodi magni molestias
+              </p>
+            </div>
           </div>
-          <p className="hidden md:block text-center">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugiat
-            provident commodi magni molestias! Vel doloribus deleniti hic ipsa
-          </p>
           <form action="" className="w-full">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               <div className="flex items-center relative w-full h-14 group">
                 <label
                   htmlFor="email"
@@ -67,6 +82,16 @@ function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                <FontAwesomeIcon
+                  icon={solid("at")}
+                  className="absolute right-3 text-tertiary group-focus-within:text-primary transition-all duration-200"
+                />
+                {isEmailValid ? null : email == null ? null : ( // Don't show any error if field hasn't even yet been filled
+                  <FontAwesomeIcon
+                    icon={solid("exclamation")}
+                    className="absolute -right-3 text-red-700 animate-bounce text-3xl"
+                  />
+                )}
               </div>
 
               <div className="flex items-center relative w-full h-14 group">
@@ -85,6 +110,16 @@ function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <FontAwesomeIcon
+                  icon={solid("lock")}
+                  className="absolute right-3 text-tertiary group-focus-within:text-primary transition-all duration-200"
+                />
+                {isPasswordValid ? null : password == null ? null : ( // Don't show any error if field hasn't even yet been filled
+                  <FontAwesomeIcon
+                    icon={solid("exclamation")}
+                    className="absolute -right-3 text-red-700 animate-bounce text-3xl"
+                  />
+                )}
               </div>
             </div>
             <div className="flex justify-between mt-4 text-sm">
@@ -109,25 +144,26 @@ function Login() {
             <div
               className="w-full h-fit flex overflow-hidden"
               onPointerMove={(event) =>
-                setSlideLeft(
-                  handleLoginClickIntent({
-                    distanceFromLeft: event.nativeEvent.offsetX,
-                    eltWidth: event.nativeEvent.target.offsetWidth,
-                    formIsValid,
+                setButtonShouldSlideLeft(
+                  checkIfButtonShouldSlideLeft({
+                    buttonDistanceFromLeft: event.nativeEvent.offsetX,
+                    buttonWidth: event.nativeEvent.target.offsetWidth,
+                    isFormValid: isEmailValid && isPasswordValid,
                   })
                 )
               }
-              onMouseOut={() => setSlideLeft(null)}
+              onMouseOut={() => setButtonShouldSlideLeft(null)}
             >
               <button
                 className={`w-1/2 h-14 mt-10 bg-secondary text-primary rounded-lg font-semibold hover:bg-primary m-auto
               hover:bg-opacity-40 transition-all duration-500
+              ${isEmailValid && isPasswordValid ? null : "invisible lg:visible"}
               ${
-                slideLeft == null
+                buttonShouldSlideLeft == null
                   ? "translate-x-0 z-1"
-                  : slideLeft
-                  ? "-translate-x-72 -z-10"
-                  : "translate-x-72 -z-10"
+                  : buttonShouldSlideLeft
+                  ? "-translate-x-72 -z-10" // Slide to the left using a negative x-axis translation
+                  : "translate-x-72 -z-10" // Slide to the right using a positive x-axis translation
               }`}
               >
                 Login
@@ -136,7 +172,7 @@ function Login() {
           </form>
         </div>
 
-        <div className="my-5 md:m-0 md:absolute bottom-10 flex gap-3">
+        <div className="my-5 lg:m-0 lg:absolute bottom-10 flex gap-3">
           Don't have an account yet?
           <span className="text-primary font-bold">Sign Up</span>
         </div>
