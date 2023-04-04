@@ -14,19 +14,36 @@ const checkIfButtonShouldSlideLeft = ({
 const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
 const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
+const initialState = {
+  name: null,
+  email: null,
+  isEmailValid: false,
+  isPasswordValid: false,
+};
+
 function Login() {
-  const [email, setEmail] = useState(null);
-  const [isEmailValid, setIsEmailValid] = useState(false);
-  const [password, setPassword] = useState(null);
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [state, setState] = useState(initialState);
   const [buttonShouldSlideLeft, setButtonShouldSlideLeft] = useState(null);
 
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setState((prevState) => {
+      return {
+        ...prevState,
+        [name]: value,
+      };
+    });
+  };
+
   useEffect(() => {
-    setIsEmailValid(emailRegex.test(email));
-  }, [email]);
-  useEffect(() => {
-    setIsPasswordValid(passwordRegex.test(password));
-  }, [password]);
+    setState((prevState) => {
+      return {
+        ...prevState,
+        isEmailValid: emailRegex.test(state.email),
+        isPasswordValid: passwordRegex.test(state.password),
+      };
+    });
+  }, [state.email, state.password]);
 
   return (
     <div className="h-screen lg:fixed top-0 left-0 right-0 bottom-0 flex flex-col lg:flex-row">
@@ -70,7 +87,7 @@ function Login() {
                 <label
                   htmlFor="email"
                   className={`absolute left-3 group-focus-within:-translate-y-7 transition-all duration-500 ease-in-out ${
-                    email ? "-translate-y-7" : ""
+                    state.email ? "-translate-y-7" : ""
                   }`}
                 >
                   Email
@@ -79,14 +96,14 @@ function Login() {
                   className="w-full h-full bg-blue-100 rounded-md focus:outline-secondary p-3"
                   type="text"
                   name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={state.email}
+                  onChange={handleInputChange}
                 />
                 <FontAwesomeIcon
                   icon={solid("at")}
                   className="absolute right-3 text-tertiary group-focus-within:text-primary transition-all duration-200"
                 />
-                {isEmailValid ? null : email == null ? null : ( // Don't show any error if field hasn't even yet been filled
+                {state.isEmailValid ? null : state.email == null ? null : ( // Don't show any error if field hasn't even yet been filled
                   <FontAwesomeIcon
                     icon={solid("exclamation")}
                     className="absolute -right-3 text-red-700 animate-bounce text-3xl"
@@ -98,7 +115,7 @@ function Login() {
                 <label
                   htmlFor="password"
                   className={`absolute left-3 group-focus-within:-translate-y-7 transition-all duration-500 ease-in-out ${
-                    password ? "-translate-y-7" : ""
+                    state.password ? "-translate-y-7" : ""
                   }`}
                 >
                   Password
@@ -107,14 +124,15 @@ function Login() {
                   className="w-full h-full bg-blue-100 rounded-md focus:outline-secondary p-3"
                   type="password"
                   name="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={state.password}
+                  onChange={handleInputChange}
                 />
                 <FontAwesomeIcon
                   icon={solid("lock")}
                   className="absolute right-3 text-tertiary group-focus-within:text-primary transition-all duration-200"
                 />
-                {isPasswordValid ? null : password == null ? null : ( // Don't show any error if field hasn't even yet been filled
+                {state.isPasswordValid ? null : state.password ==
+                  null ? null : ( // Don't show any error if field hasn't even yet been filled
                   <FontAwesomeIcon
                     icon={solid("exclamation")}
                     className="absolute -right-3 text-red-700 animate-bounce text-3xl"
@@ -148,7 +166,7 @@ function Login() {
                   checkIfButtonShouldSlideLeft({
                     buttonDistanceFromLeft: event.nativeEvent.offsetX,
                     buttonWidth: event.nativeEvent.target.offsetWidth,
-                    isFormValid: isEmailValid && isPasswordValid,
+                    isFormValid: state.isEmailValid && state.isPasswordValid,
                   })
                 )
               }
@@ -157,7 +175,11 @@ function Login() {
               <button
                 className={`w-1/2 h-14 mt-10 bg-secondary text-primary rounded-lg font-semibold hover:bg-primary m-auto
               hover:bg-opacity-40 transition-all duration-500
-              ${isEmailValid && isPasswordValid ? null : "invisible lg:visible"}
+              ${
+                state.isEmailValid && state.isPasswordValid
+                  ? null
+                  : "invisible lg:visible"
+              }
               ${
                 buttonShouldSlideLeft == null
                   ? "translate-x-0 z-1"
