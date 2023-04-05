@@ -15,8 +15,8 @@ const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
 const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
 const initialState = {
-  name: null,
-  email: null,
+  name: undefined,
+  email: undefined,
   isEmailValid: false,
   isPasswordValid: false,
 };
@@ -74,7 +74,7 @@ function Login() {
           <div className="flex flex-col items-center gap-4 lg:gap-8">
             <img className="max-h-14" src={logo} alt="logo" />
             <div className="flex flex-col items-center gap-3">
-              <h1 className="text-2xl font-bold text-primary">Login Here!</h1>
+              <p className="text-2xl font-bold text-primary">Login Here!</p>
               <p className="text-center text-tertiary font-bold">
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugiat
                 provident commodi magni molestias
@@ -103,7 +103,8 @@ function Login() {
                   icon={solid("at")}
                   className="absolute right-3 text-tertiary group-focus-within:text-primary transition-all duration-200"
                 />
-                {state.isEmailValid ? null : state.email == null ? null : ( // Don't show any error if field hasn't even yet been filled
+                {state.isEmailValid ? null : state.email ===
+                  undefined ? null : ( // Don't show any error if field hasn't even yet been filled
                   <FontAwesomeIcon
                     icon={solid("exclamation")}
                     className="absolute -right-3 text-red-700 animate-bounce text-3xl"
@@ -131,8 +132,8 @@ function Login() {
                   icon={solid("lock")}
                   className="absolute right-3 text-tertiary group-focus-within:text-primary transition-all duration-200"
                 />
-                {state.isPasswordValid ? null : state.password ==
-                  null ? null : ( // Don't show any error if field hasn't even yet been filled
+                {state.isPasswordValid ? null : state.password ===
+                  undefined ? null : ( // Don't show any error if field hasn't even yet been filled
                   <FontAwesomeIcon
                     icon={solid("exclamation")}
                     className="absolute -right-3 text-red-700 animate-bounce text-3xl"
@@ -142,7 +143,7 @@ function Login() {
             </div>
             <div className="flex justify-between mt-4 text-sm">
               <label
-                for="default-toggle"
+                htmlFor="default-toggle"
                 className="inline-flex relative items-center cursor-pointer"
               >
                 <input
