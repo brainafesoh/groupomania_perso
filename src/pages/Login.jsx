@@ -93,7 +93,7 @@ function Login() {
                   Email
                 </label>
                 <input
-                  className="w-full h-full bg-blue-100 rounded-md focus:outline-secondary p-3"
+                  className="w-full h-full bg-blue-100 rounded-md focus:outline-secondary p-3 invisible"
                   type="text"
                   name="email"
                   value={state.email}
